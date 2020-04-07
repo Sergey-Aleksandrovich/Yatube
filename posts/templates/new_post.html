@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load user_filters %}
+{% block title %}
+    {% if  post != None %}
+        Редактировать запись
+    {% else %}
+        Cоздание новой записи
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        {% if form.errors %}
+            {% for error in form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error|escape }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <br>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label }}
+                    {{ field|addclass:"form-control " }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary float-left">
+                {% if  post != None %}
+                    Редактировать запись
+                {% else %}
+                    Создать запись
+                {% endif %}
+
+
+            </button>
+        </form>
+    </div>
+    <br>
+{% endblock %}
