@@ -44,7 +44,10 @@ def profile(request, username):
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    following = Follow.objects.filter(user=request.user, author=author).exists()
+    if request.user.is_authenticated:
+        following = Follow.objects.filter(user=request.user, author=author).exists()
+    else:
+        following = True
     return render(request, 'profile.html',
                   {'page': page, 'author': author, 'paginator': paginator, 'following': following})
 
@@ -54,7 +57,7 @@ def post_view(request, username, post_id):
     post = get_object_or_404(Post.objects.select_related('author'), id=post_id)
     comments = post.post_comment.all()
     form = CommentForm()
-    return render(request, 'post.html', {'post': post, 'author': author, 'comments': comments,'form':form})
+    return render(request, 'post.html', {'post': post, 'author': author, 'comments': comments, 'form': form})
 
 
 @login_required
@@ -105,7 +108,8 @@ def follow_index(request):
 @login_required
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
-    follow = (Follow.objects.filter(user=request.user, author=author).exists()) or (request.user == author) # Если уже подписан или пытаешься сам на себя подписаться, то редиректнет.
+    follow = (Follow.objects.filter(user=request.user, author=author).exists()) or (
+                request.user == author)  # Если уже подписан или пытаешься сам на себя подписаться, то редиректнет.
     if follow == True:
         return redirect(f'/{username}/')
     else:

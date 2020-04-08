@@ -4,48 +4,7 @@
 {% block content %}
     <main role="main" class="container">
         <div class="row">
-            <div class="col-md-3 mb-3 mt-1">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="h2">
-                            <!-- Имя автора -->
-                            Автор: {{ author.get_full_name }}
-                        </div>
-                        <div class="h3 text-muted">
-                            <!-- username автора -->
-                            Никнейм: {{ author.username }}
-                        </div>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <div class="h6 text-muted">
-                                Подписчиков: {{ author.following.count }} <br/>
-                                Подписан: {{ author.follower.count }}
-                                {% if author != user %}
-                                    <li class="list-group-item">
-                                        {% if following %}
-                                            <a class="btn btn-lg btn-light"
-                                               href="{% url 'profile_unfollow' author.username %}" role="button">
-                                                Отписаться
-                                            </a>
-                                        {% else %}
-                                            <a class="btn btn-lg btn-primary"
-                                               href="{% url 'profile_follow' author.username %}" role="button">
-                                                Подписаться
-                                            </a>
-                                        {% endif %}
-                                    </li>
-                                {% endif %}
-                        </li>
-                        <li class="list-group-item">
-                            <div class="h6 text-muted">
-                                <!-- Количество записей -->
-                                Записей: {{ paginator.count }}
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            {% include "user_data.html" with author=author following=following %}
             <!-- Начало блока с отдельным постом -->
             {% for post in page %}
                 <div class="col-md-9">
