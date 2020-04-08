@@ -21,39 +21,40 @@
                             <div class="h6 text-muted">
                                 Подписчиков: {{ author.following.count }} <br/>
                                 Подписан: {{ author.follower.count }}
-                        <li class="list-group-item">
-                            {% if author.following!=None %}
-                                <a class="btn btn-lg btn-light"
-                                   href="{% url 'profile_unfollow' author.username %}" role="button">
-                                    Отписаться
-                                </a>
-                            {% else %}
-                                <a class="btn btn-lg btn-primary"
-                                   href="{% url 'profile_follow' author.username %}" role="button">
-                                    Подписаться
-                                </a>
-                            {% endif %}
+                                {% if author != user %}
+                                    <li class="list-group-item">
+                                        {% if following %}
+                                            <a class="btn btn-lg btn-light"
+                                               href="{% url 'profile_unfollow' author.username %}" role="button">
+                                                Отписаться
+                                            </a>
+                                        {% else %}
+                                            <a class="btn btn-lg btn-primary"
+                                               href="{% url 'profile_follow' author.username %}" role="button">
+                                                Подписаться
+                                            </a>
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
                         </li>
+                        <li class="list-group-item">
+                            <div class="h6 text-muted">
+                                <!-- Количество записей -->
+                                Записей: {{ paginator.count }}
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="h6 text-muted">
-                        <!-- Количество записей -->
-                        Записей: {{ paginator.count }}
-                    </div>
-                </li>
-                </ul>
             </div>
-        </div>
-        <!-- Начало блока с отдельным постом -->
-        {% for post in page %}
-            <div class="col-md-9">
-                {% include "post_item.html" with post=post %}
-            </div>
-        {% endfor %}
-        {% if page.has_other_pages %}
-            {% include "paginator.html" with items=page paginator=paginator %}
-        {% endif %}
+            <!-- Начало блока с отдельным постом -->
+            {% for post in page %}
+                <div class="col-md-9">
+                    {% include "post_item.html" with post=post %}
+                </div>
+            {% endfor %}
+            {% if page.has_other_pages %}
+                {% include "paginator.html" with items=page paginator=paginator %}
+            {% endif %}
         </div>
     </main>
 {% endblock %}

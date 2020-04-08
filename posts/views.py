@@ -53,7 +53,8 @@ def post_view(request, username, post_id):
     author = get_object_or_404(User, username=username)
     post = get_object_or_404(Post.objects.select_related('author'), id=post_id)
     comments = post.post_comment.all()
-    return render(request, 'post.html', {'post': post, 'author': author, 'comments': comments})
+    form = CommentForm()
+    return render(request, 'post.html', {'post': post, 'author': author, 'comments': comments,'form':form})
 
 
 @login_required

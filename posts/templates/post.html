@@ -35,28 +35,7 @@
 
             <div class="col-md-9">
                 {% include "post_item.html" with post=post %}
-                {% if post.post_comment.count %}
-                    <div class="h6">
-                        Комментарии пользователей
-                    </div>
-                {% else %}
-                    <div class="h6">
-                        Стань первым, кто добавит комментарий
-                    </div>
-                {% endif %}
-                {% for item in comments %}
-                    <div class="media mb-4">
-                        <div class="media-body">
-                            <h5 class="mt-0">
-                                <a
-                                        href="{% url 'profile' item.author.username %}"
-                                        name="comment_{{ item.id }}"
-                                >{{ item.author.username }}</a>
-                            </h5>
-                            {{ item.text }}
-                        </div>
-                    </div>
-                {% endfor %}
+                {% include "comments.html" with post=post comments=comments%}
             </div>
         </div>
         </div>

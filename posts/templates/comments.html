@@ -19,7 +19,15 @@
         </form>
     </div>
 {% endif %}
-
+{% if post.post_comment.count %}
+    <div class="h6">
+        Комментарии пользователей
+    </div>
+{% else %}
+    <div class="h6">
+        Стань первым, кто добавит комментарий
+    </div>
+{% endif %}
 <!-- Комментарии -->
 {% for item in comments %}
     <div class="media mb-4">
