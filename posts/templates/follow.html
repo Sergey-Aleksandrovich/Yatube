@@ -3,7 +3,6 @@
 {% block title %} Последние обновления {% endblock %}
 
 {% block content %}
-    {% cache 20 post page user %}
         <div class="container">
             {% include "menu.html" with index=True %}
             <h1> Последние обновления на сайте</h1>
@@ -14,5 +13,4 @@
                 {% include "paginator.html" with items=page paginator=paginator %}
             {% endif %}
         </div>
-    {% endcache %}
 {% endblock %}

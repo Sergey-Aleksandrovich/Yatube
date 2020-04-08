@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from time import sleep
 
-from posts.models import User, Group
+from posts.models import User, Group, Follow, Comment
 
 
 class PersonalPageTest(TestCase):
@@ -46,6 +46,8 @@ class DisplayPostOnPagesTest(TestCase):
         self.client.post('/new/', {'text': 'Проверка добавления поста'})
 
     def test_display_on_the_main_page(self):
+        self.client.get('/')
+        sleep(20)
         response = self.client.get('/')
         self.assertContains(response, 'Проверка добавления поста', count=1, status_code=200,
                             msg_prefix='The post is not displayed on the main page'
@@ -73,6 +75,8 @@ class PostEditingTest(TestCase):
         self.client.post('/testuser/1/edit/', {'text': 'Проверка редактирования поста'})
 
     def test_display_on_the_main_page(self):
+        self.client.get('/')
+        sleep(20)
         response = self.client.get('/')
         self.assertContains(response, 'Проверка редактирования поста', count=1, status_code=200,
                             msg_prefix='Modified post is not displayed on the main page '
@@ -115,6 +119,8 @@ class ImagesTest(TestCase):
     def test_tag_img_index(self):
         with open('posts/1.jpg', 'rb') as img:
             self.client.post('/new/', {'text': 'Проверка добавления поста', 'image': img})
+        self.client.get('/')
+        sleep(20)
         response = self.client.get('/')
         self.assertContains(response, '<img', count=1, status_code=200, msg_prefix='')
 
@@ -154,3 +160,48 @@ class CacheTest(TestCase):
         sleep(20)
         response = self.client.get('/')
         self.assertContains(response, 'Проверка добавления поста', count=1, status_code=200, msg_prefix='')
+
+
+class SubscriptionTest(TestCase):
+    def setUp(self):
+        self.follower_user = User.objects.create_user(username='testuser', password='testpass')
+        self.following_user = User.objects.create_user(username='testsubscription', password='testsubscription')
+        self.follower = Client()
+        self.follower.login(username='testuser', password='testpass')
+
+    def test_record_in_follow(self):
+        self.follower.get('/testsubscription/follow/')
+        self.assertTrue(Follow.objects.filter(user=self.follower_user, author=self.following_user).exists(),
+                        msg='No subscription record')
+        self.follower.get('/testsubscription/unfollow/')
+        self.assertFalse(Follow.objects.filter(user=self.follower_user, author=self.following_user).exists(),
+                         msg='Subscription record is not deleted')
+
+    def appearance_of_a_record_with_a_signed(self):
+        self.following = Client()
+        self.following.login(username='testsubscription', password='testsubscription')
+        self.following.post('/new/', {'text': 'Пост'})
+        self.follower.get('/testsubscription/follow/')
+        response = self.follower.get('/follow/')
+        self.assertContains(response, 'Пост', count=1, status_code=200, msg_prefix='')
+        self.follower.get('/testsubscription/unfollow/')
+        response = self.follower.get('/follow/')
+        self.assertNotContains(response, 'Пост ', status_code=200, msg_prefix='')
+
+    def only_authorized_can_comment(self):
+        self.follower.post('/new/', {'text': 'Пост'})
+        self.follower.post('/testuser/1/comment/',
+                           {'text': 'Проверка добавления комментария авторизованным пользователем'})
+        self.assertTrue(
+            Comment.objects.filter(text='Проверка добавления комментария авторизованным пользователем').exists())
+        response = self.follower.get('/testuser/1/')
+        self.assertContains(response, 'Проверка добавления комментария авторизованным пользователем', count=1,
+                            status_code=200, msg_prefix='')
+        self.client = Client()
+        self.client.post('/testuser/1/comment/',
+                         {'text': 'Проверка добавления коментария неавторизованным пользователем'})
+        self.assertFalse(
+            Comment.objects.filter(text='Проверка добавления комментария неавторизованным пользователем').exists())
+        response = self.client.get('/testuser/1/')
+        self.assertNotContains(response, 'Проверка добавления комментария неавторизованным пользователем',
+                               status_code=200, msg_prefix='')
