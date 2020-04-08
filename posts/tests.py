@@ -1,7 +1,9 @@
-from django.test import TestCase, Client
+from django.conf import settings
+from django.test import TestCase, Client, override_settings
 from time import sleep
 
 from posts.models import User, Group, Follow, Comment
+
 
 
 class PersonalPageTest(TestCase):
@@ -45,9 +47,9 @@ class DisplayPostOnPagesTest(TestCase):
         self.client.login(username='testuser', password='testpass')
         self.client.post('/new/', {'text': 'Проверка добавления поста'})
 
+    @override_settings(CACHES=settings.TEST_CACHES)
     def test_display_on_the_main_page(self):
         self.client.get('/')
-        sleep(20)
         response = self.client.get('/')
         self.assertContains(response, 'Проверка добавления поста', count=1, status_code=200,
                             msg_prefix='The post is not displayed on the main page'
@@ -74,9 +76,9 @@ class PostEditingTest(TestCase):
         self.client.post('/new/', {'text': 'Проверка добавления поста'})
         self.client.post('/testuser/1/edit/', {'text': 'Проверка редактирования поста'})
 
+    @override_settings(CACHES=settings.TEST_CACHES)
     def test_display_on_the_main_page(self):
         self.client.get('/')
-        sleep(20)
         response = self.client.get('/')
         self.assertContains(response, 'Проверка редактирования поста', count=1, status_code=200,
                             msg_prefix='Modified post is not displayed on the main page '
@@ -116,11 +118,11 @@ class ImagesTest(TestCase):
         response = self.client.get('/testuser/1/')
         self.assertContains(response, '<img', count=1, status_code=200, msg_prefix='')
 
+    @override_settings(CACHES=settings.TEST_CACHES)
     def test_tag_img_index(self):
         with open('posts/1.jpg', 'rb') as img:
             self.client.post('/new/', {'text': 'Проверка добавления поста', 'image': img})
         self.client.get('/')
-        sleep(20)
         response = self.client.get('/')
         self.assertContains(response, '<img', count=1, status_code=200, msg_prefix='')
 

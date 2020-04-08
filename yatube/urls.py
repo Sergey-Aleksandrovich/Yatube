@@ -42,13 +42,13 @@ urlpatterns = [
     path('auth/', include('django.contrib.auth.urls')),
 
 ]
-
 urlpatterns += [
     path('about-us/', views.flatpage, {'url': '/about-us/'}, name='about'),
     path('terms/', views.flatpage, {'url': '/terms/'}, name='terms'),
     path('about-author/', views.flatpage, {'url': '/about-author/'}, name='about-author'),
     path('about-spec/', views.flatpage, {'url': '/about-spec/'}, name='about-spec'),
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

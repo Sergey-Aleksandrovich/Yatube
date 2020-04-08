@@ -5,7 +5,7 @@
 {% block content %}
     {% cache 20 post page user %}
         <div class="container">
-            {% include "menu.html" with index=True %}
+            {% include "menu.html" %}
             <h1> Последние обновления на сайте</h1>
             {% for post in page %}
                 {% include "post_item.html" with post=post %}

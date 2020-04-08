@@ -125,7 +125,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media" )
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = 'index'
@@ -138,7 +138,14 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 # Идентификатор текущего сайта
 SITE_ID = 1
 CACHES = {
-        'default': {
-                'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        }
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    },
+}
+
+TEST_CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
 }
