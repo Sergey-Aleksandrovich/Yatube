@@ -31,8 +31,6 @@ urlpatterns = [
     # flatpages
     path('about/', include('django.contrib.flatpages.urls')),
 
-    # обработчик для главной страницы ищем в urls.py приложения posts
-    path('', include('posts.urls')),
 
     # регистрация и авторизация
     path('auth/', include('users.urls')),
@@ -47,6 +45,8 @@ urlpatterns += [
     path('terms/', views.flatpage, {'url': '/terms/'}, name='terms'),
     path('about-author/', views.flatpage, {'url': '/about-author/'}, name='about-author'),
     path('about-spec/', views.flatpage, {'url': '/about-spec/'}, name='about-spec'),
+    # обработчик для главной страницы ищем в urls.py приложения posts
+    path('', include('posts.urls')),
 ]
 
 if settings.DEBUG:

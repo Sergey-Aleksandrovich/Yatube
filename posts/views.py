@@ -55,9 +55,14 @@ def profile(request, username):
 def post_view(request, username, post_id):
     author = get_object_or_404(User, username=username)
     post = get_object_or_404(Post.objects.select_related('author'), id=post_id)
-    comments = post.post_comment.all()
+    comments = post.comments.all()
     form = CommentForm()
-    return render(request, 'post.html', {'post': post, 'author': author, 'comments': comments, 'form': form})
+    if request.user.is_authenticated:
+        following = Follow.objects.filter(user=request.user, author=author).exists()
+    else:
+        following = True
+    return render(request, 'post.html',
+                  {'post': post, 'author': author, 'comments': comments, 'form': form, 'following': following})
 
 
 @login_required
@@ -78,7 +83,7 @@ def post_edit(request, username, post_id):
 def add_comment(request, username, post_id):
     author = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, pk=post_id, author=author)
-    comments = post.post_comment.all()
+    comments = post.comments.all()
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -94,7 +99,7 @@ def add_comment(request, username, post_id):
 
 @login_required
 def follow_index(request):
-    follows = Follow.objects.filter(user=request.user)
+    follows = Follow.objects.select_related('author').filter(user=request.user)
     author = []
     for follow in follows:
         author.append(follow.author)
@@ -109,7 +114,7 @@ def follow_index(request):
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
     follow = (Follow.objects.filter(user=request.user, author=author).exists()) or (
-                request.user == author)  # Если уже подписан или пытаешься сам на себя подписаться, то редиректнет.
+            request.user == author)  # Если уже подписан или пытаешься сам на себя подписаться, то редиректнет.
     if follow == True:
         return redirect(f'/{username}/')
     else:
