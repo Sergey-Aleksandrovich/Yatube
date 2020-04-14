@@ -3,7 +3,7 @@
 {% block title %} Последние обновления {% endblock %}
 
 {% block content %}
-    {% cache 20 post page user %}
+    {% cache 20 post page user request %}
         <div class="container">
             {% include "menu.html" %}
             <h1> Последние обновления на сайте</h1>

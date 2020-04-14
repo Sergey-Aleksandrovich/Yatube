@@ -25,11 +25,8 @@ SECRET_KEY = 'xqp$(s%b^pk9y0mx!!oj=72-e%vbsv7!_&h2r!4mh_-(^3nzlp'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '[::1]',
-    'testserver',
-]
+        "*",
+    ]
 
 # Application definition
 
@@ -45,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sorl.thumbnail',
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -55,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'yatube.urls'
@@ -124,8 +123,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = 'index'
@@ -149,3 +149,8 @@ TEST_CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
+
+# Добавьте IP адреса при обращении с которых будет доступен инструмент DjDT
+INTERNAL_IPS = [
+        "127.0.0.1",
+]
