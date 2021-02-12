@@ -13,7 +13,6 @@ __pycache__/
 *.sublime-project
 *.sublime-workspace
 
-media/
 sent_emails/
 db.sqlite3
 static/
