@@ -5,10 +5,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>{% block title %}The Last Social Media You'll Ever Need{% endblock %} | Yatube</title>
-        <!-- Загрузка статики -->
         {% load static %}
         <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}"/>
-        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon.png' %}"/>
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'posts/favicon.png' %}"/>
         <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
         <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
     </head>
@@ -17,10 +16,9 @@
         <main>
             <div class="container">
                 {% block content %}
-                <!-- Содержимое страницы -->
                 {% endblock content %}
             </div>
         </main>
-    {% include 'footer.html' %}
+        {% include 'footer.html' %}
     </body>
 </html>

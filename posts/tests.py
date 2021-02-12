@@ -113,7 +113,7 @@ class ImagesTest(TestCase):
         self.user = User.objects.create_user(username='testuser', password='testpass')
         self.client.login(username='testuser', password='testpass')
         self.group = Group.objects.create(title='Cat', slug='Cat')
-        with open('posts/1.jpg', 'rb') as img:
+        with open('tests/fixtures/1.jpg', 'rb') as img:
             self.client.post('/new/', {'text': 'Добавления поста с картинкой', 'image': img, 'group': self.group.pk})
 
     def test_tag_img_post(self):
@@ -131,7 +131,7 @@ class ImagesTest(TestCase):
         self.assertContains(response, '<img', count=1, status_code=200, msg_prefix='')
 
     def test_tag_img_profile(self):
-        with open('posts/1.jpg', 'rb') as img:
+        with open('tests/fixtures/1.jpg', 'rb') as img:
             self.client.post('/new/', {'text': 'Проверка добавления поста', 'image': img})
         response = self.client.get(f'/{self.user.username}/')
         self.assertContains(response, '<img', status_code=200, msg_prefix='')

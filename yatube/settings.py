@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'xqp$(s%b^pk9y0mx!!oj=72-e%vbsv7!_&h2r!4mh_-(^3nzlp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
         "*",
@@ -121,6 +121,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'posts/static'),
+    os.path.join(BASE_DIR, 'users/static'),
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
@@ -129,13 +133,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = 'index'
-# LOGOUT_REDIRECT_URL = 'index'
 
-#  подключаем движок filebased.EmailBackend
+
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-# указываем директорию, в которую будут складываться файлы писем
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
-# Идентификатор текущего сайта
 SITE_ID = 1
 CACHES = {
     'default': {
@@ -150,7 +151,6 @@ TEST_CACHES = {
     }
 }
 
-# Добавьте IP адреса при обращении с которых будет доступен инструмент DjDT
 INTERNAL_IPS = [
         "127.0.0.1",
 ]
