@@ -27,6 +27,12 @@ Yatube - это социальная сеть для публикации лич
 python manage.py migrate
 ```
 
+Команда для заполнения начальными данными проект
+ 
+```
+python manage.py loaddata fixtures.json
+```
+
 Команда для запуска проекта
  
 ```
