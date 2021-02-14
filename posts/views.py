@@ -114,7 +114,7 @@ def follow_index(request):
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
     follow = (Follow.objects.filter(user=request.user, author=author).exists()) or (
-            request.user == author)  # Если уже подписан или пытаешься сам на себя подписаться, то редиректнет.
+            request.user == author)
     if follow == True:
         return redirect(f'/{username}/')
     else:
