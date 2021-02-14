@@ -15,4 +15,4 @@ __pycache__/
 
 sent_emails/
 db.sqlite3
-static/
+/static/
